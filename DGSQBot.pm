@@ -157,11 +157,10 @@ sub do_everything {
 
     # load list of finished games
     my %finished;
-    open my $fh, $self->finished_games;
-    if (defined $fh) {
+    if (open my $fh, $self->finished_games) { 
         chop, $finished{$_} = 1 while <$fh>;
         close $fh;
-    }
+    } 
 
     my @turns = $self->dgsclient->my_turn;
     return unless defined scalar @turns; # Probably couldn't connect
