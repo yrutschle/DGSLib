@@ -1,0 +1,81 @@
+#! /usr/bin/perl -w
+
+# DGS Robot: A robot skeleton for dragongoserver.net
+# Copyright (C) 2006-2010  Yves Rutschle
+#
+# This program is free software; you can redistribute it
+# and/or modify it under the terms of the GNU General Public
+# License as published by the Free Software Foundation;
+# either
+# version 2 of the License, or (at your option) any later
+# version.
+# 
+# This program is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied
+# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+# PURPOSE.  See the GNU General Public License for more
+# details.
+# 
+# The full text for the General Public License is here:
+# http://www.gnu.org/licenses/gpl.html
+
+
+use strict;
+
+use DGSBot;
+
+use Data::Dumper;
+
+my $bot = new DGSBot(
+    name => "MoGo",
+
+    verbose => 0,
+    dont_move => 0,
+
+    logging => 1,
+
+    sgffile => "/tmp/sgf_mogo",
+    sgfout => "/tmp/out_mogo.sgf",
+    finished_games => "finished_mogo.lst",
+    logfile => "mogobot.log",
+
+    pidfile=> "/tmp/mogobot.pid",
+    login=>'mogobot', 
+    passwd=>`cat passwd.mogobot`;
+    cookies => "$ENV{HOME}/.mogobot.cookies",
+
+    # Parameter %d turned into boardsize
+    gtp_engine => "/home/yves/MoGo_release3/mogo --%d --time 600 --nbThreads 8 2> /dev/null",
+
+
+    # board_ok a callback to check the board size is
+    # acceptable for this robot. if it isn't, the invite is
+    # rejected with the  badsize_msg.
+    # It must return 1 to accept the invite, 0 otherwise.
+    # The DGSBot method to call is board_ok();
+    board_ok => sub { 
+        (($_[0]->boardsize == 9) 
+                or ($_[0]->boardsize == 13) 
+                or ($_[0]->boardsize == 19)
+        )
+            and ($_[0]->handicap < 5)
+    },
+    badsize_msg => "I am sorry, I only play board sizes 9, 13 and 19 and less than 5 handicap.",
+
+    # pre_run is called after loading the sgf, before 
+    # computing the move.
+    # First parameter is a GTP engine, second parameter the
+    # board
+
+        # We use the komi setting to force mogo to try to
+        # win by more than .5 points, otherwise it loses
+        # half the time in Japanese setting.
+    pre_run => sub {
+        my ($gtp, $board) = @_;
+        $gtp->gtp_transaction("komi ".($board->state eq 'white' ? $board->komi - 5 : $board->komi + 5)."\n");
+    },
+);
+
+die "Error starting the engine\n" unless defined $bot;
+
+$bot->do_everything;
