@@ -195,7 +195,10 @@ sub do_everything {
         # 'SCORE': my turn to mark dead stones
         if ($b->state eq 'SCORE') {
             warn "SCORE: opponent hasn't marked, I'm doing it\n" if $self->verbose;
-            $b->mark_dead($self->sgffile, $self->sgfout);
+            unless ($b->mark_dead($self->sgffile, $self->sgfout)) {
+                warn "SCORE: no dead stones, finishing game\n" if $self->verbose;
+                $b->finish_game;
+            }
             next;
         }
 

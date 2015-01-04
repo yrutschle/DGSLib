@@ -139,6 +139,8 @@ sub place_standard_handicap {
     return 1;
 }
 
+# Tell DGS what we think is dead, and returns the number of stones we think are
+# dead. If no stone is dead, do nothing towards DGS.
 sub mark_dead {
     my ($self, $sgffile, $sgfout) = @_;
 
@@ -158,6 +160,7 @@ sub mark_dead {
             "obj=game&cmd=score&gid=$id&move_id=".
             $self->moveid."&move=$moves&toggle=uniq&fmt=board&agree=0");
     }
+    return scalar @gnu_dead;
 }
 
 # If we agree with the opponent's dead stones, finish the game
