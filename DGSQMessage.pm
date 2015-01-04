@@ -39,6 +39,11 @@ has rated => (is => 'rw', isa => 'Bool' );
 has weekend_clocked => (is => 'rw', isa => 'Bool' );
 has subject => (is => 'rw', isa => 'Str' );
 has verbose => (is => 'rw', isa => 'Bool' );
+has opp_started_games => (is => 'rw', isa => 'Int' );
+has time_mode => (is => 'rw', isa => 'Str' );
+has time_main => (is => 'rw', isa => 'Int' );
+has time_byo => (is => 'rw', isa => 'Int' );
+has time_periods => (is => 'rw', isa => 'Int' );
 
 
 # $board->load_info(); 
@@ -60,12 +65,13 @@ sub load_info {
     if ($self->message_type eq 'INVITATION') {
         return unless defined $info->{game_settings};
         $self->boardsize($info->{game_settings}->{size});
-        $self->handicap($info->{game_settings}->{handicap});
+        $self->handicap($info->{game_settings}->{calc_handicap});
         $self->weekend_clocked($info->{game_settings}->{time_weekend_clock});
-        $self->komi($info->{game_settings}->{komi});
-        $self->rated($info->{game_settings}->{rated});
-        $self->ruleset($info->{game_settings}->{ruleset});
-        $self->handicap_type($info->{game_settings}->{handicap_type});
+        $self->komi($info->{game_settings}->{calc_komi});
+        for my $field (qw/opp_started_games time_mode time_main time_byo time_periods 
+            rated ruleset handicap_type/) {
+            $self->$field($info->{game_settings}->{$field});
+        }
     }
 
     # Trying to fix undefined value warnings that I can't find... 01OCT2012
