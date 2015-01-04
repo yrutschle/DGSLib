@@ -80,7 +80,7 @@ sub load_info {
     $self->rated($info->{rated});
     $self->state($info->{status});
     $self->moveid($info->{move_id});
-    $self->state('handicap') if ($info->{move_id} == 0 and $info->{handicap} > 0);
+    $self->state('handicap') if ($info->{game_action} == 1);
 }
 
 sub sgf {
