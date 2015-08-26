@@ -54,7 +54,7 @@ has black_prisoners => (is => 'rw', isa => 'Int' );
 has black_time => (is => 'rw', isa => 'Str' );
 has white_time => (is => 'rw', isa => 'Str' );
 has rated => (is => 'rw', isa => 'Bool' );
-enum 'GameState' => qw(KOMI SETUP PLAY PASS SCORE SCORE2 FINISHED handicap);
+enum 'GameState' => [qw(KOMI SETUP PLAY PASS SCORE SCORE2 FINISHED handicap)];
 has state => (is => 'rw', isa => 'GameState' );
 has verbose => (is => 'ro', isa => 'Bool' );
 
