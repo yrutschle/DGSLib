@@ -140,12 +140,11 @@ sub read_list {
     return %out;
 }
 
-# Adds a game ID to a file with optional comment
+# Adds a game ID to a file
 sub add_game_to_list {
-    my ($filename, $b, $c) = @_;
+    my ($filename, $b) = @_;
     open my $fh, ">> ".$filename or die "$filename: $!\n";
-    $c //= "";
-    print $fh $b->id." ($c)\n";;
+    print $fh $b->id."\n";;
 }
 
 sub do_everything {
@@ -254,7 +253,7 @@ sub do_everything {
         $self->message($self->name . " says: '$move' ($coord2)\n");
 
         my $res = $b->move($coord2) unless $self->dont_move;
-        add_game_to_list($self->error_games, $b, $res->{error}) if (defined $res and $res->{error});
+        add_game_to_list($self->error_games, $b) if (defined $res and $res->{error});
         $done_something++;
     }
 #unlink $sgffile;
