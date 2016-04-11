@@ -83,7 +83,6 @@ sub loadsgf{
     my $node = $sgf;
     do {
         my ($m, $c);
-        warn $node->AB." AB , ". $node->AW." AW\n";
         if (my $handi = $node->AB) {
             foreach $m (split /,/, $handi) {
                 $c = convert_coord_letters_to_std $size, $m;
