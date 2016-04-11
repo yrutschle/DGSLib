@@ -30,6 +30,7 @@ has name           => ( is => 'rw', isa => 'Str' );
 has sgffile        => ( is => 'rw', isa => 'Str' );
 has sgfout         => ( is => 'rw', isa => 'Str' );
 has finished_games => ( is => 'rw', isa => 'Str' );
+has error_games    => ( is => 'rw', isa => 'Str' );
 has logfile        => ( is => 'rw', isa => 'Str' );
 has pidfile        => ( is => 'rw', isa => 'Str' );
 has throttle_file  => ( is => 'rw', isa => 'Str' );
@@ -127,6 +128,26 @@ sub do_pre_run {
     &$sub($engine, $board);
 }
 
+
+# Reads a file containing a list of things, returned as a hash
+sub read_list {
+    my ($filename) = @_;
+
+    my %out;
+    if (open my $fh, $filename) { 
+        chop, $out{$_} = 1 while <$fh>;
+    } 
+    return %out;
+}
+
+# Adds a game ID to a file with optional comment
+sub add_game_to_list {
+    my ($filename, $b, $c) = @_;
+    open my $fh, ">> ".$filename or die "$filename: $!\n";
+    $c //= "";
+    print $fh $b->id." ($c)\n";;
+}
+
 sub do_everything {
     my ($self) = @_;
 
@@ -155,18 +176,15 @@ sub do_everything {
         $done_something++;
     }
 
-    # load list of finished games
-    my %finished;
-    if (open my $fh, $self->finished_games) { 
-        chop, $finished{$_} = 1 while <$fh>;
-        close $fh;
-    } 
+    # load list of finished and error games
+    my %finished = read_list($self->finished_games);
+    my %error = read_list($self->error_games);
 
     my @turns = $self->dgsclient->my_turn;
     return unless defined scalar @turns; # Probably couldn't connect
     foreach my $b (@turns)
     {
-        next if $finished{$b->id};
+        next if $finished{$b->id} or $error{$b->id};
 
         $b->load_info;
 
@@ -209,8 +227,7 @@ sub do_everything {
                 # Disagreement -- board will stay around to be finished
                 # manually
                 $finished{$b->id}++;
-                open my $fh, ">> ".$self->finished_games or die $self->finished_games.": $!\n";
-                print $fh $b->id."\n";;
+                add_game_to_list($self->finished_games, $b);
                 $self->message("marking ".$b->id.": disagreement\n");
             } else {
                 $self->message("marking ".$b->id.": game finished\n");
@@ -236,7 +253,8 @@ sub do_everything {
         }
         $self->message($self->name . " says: '$move' ($coord2)\n");
 
-        $b->move($coord2) unless $self->dont_move;
+        my $res = $b->move($coord2) unless $self->dont_move;
+        add_game_to_list($self->error_games, $b, $res->{error}) if (defined $res and $res->{error});
         $done_something++;
     }
 #unlink $sgffile;

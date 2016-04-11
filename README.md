@@ -49,6 +49,9 @@ bot:
   file, the bot will just fetch the boards, try to finish
   them, fail, and fill the file again.
 
+* error_games: a list of games that produced an error. The
+  behaviour is the same as the previous setting.
+
 * gtp_engine: Specifies the executable to be run. It is
   expected to accept GTP commands on stdin, and reply GTP on
   stdout.

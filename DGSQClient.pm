@@ -202,7 +202,6 @@ sub do_quick {
     if ($json->{error}) {
         warn "$rq: Error $json->{error} ($json->{error_msg})\nFull response:\n".
              $response->content;
-        return undef;
     }
 
     return $json;

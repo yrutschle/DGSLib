@@ -35,6 +35,7 @@ my $bot = new DGSQBot(
     sgffile => "/tmp/qsgf",
     sgfout => "/tmp/qout.sgf",
     finished_games => "qfinished.lst",
+    error_games => "qerror.lst",
     logfile => "qrobot.log",
     throttle_file => "/tmp/qrobot.throttle",
 
