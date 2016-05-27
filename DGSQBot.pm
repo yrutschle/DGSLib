@@ -253,7 +253,10 @@ sub do_everything {
         $self->message($self->name . " says: '$move' ($coord2)\n");
 
         my $res = $b->move($coord2) unless $self->dont_move;
-        add_game_to_list($self->error_games, $b) if (defined $res and $res->{error});
+        if (defined $res and $res->{error}) {
+            add_game_to_list($self->error_games, $b);
+            message("Error on game ".$b->id.": $res->{error}\n");
+        }
         $done_something++;
     }
 #unlink $sgffile;
