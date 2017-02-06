@@ -239,27 +239,33 @@ sub do_everything {
         my $colour = $engine->loadsgf($self->sgffile);
         $self->do_pre_run($engine, $b);
         my $move = $engine->next_move($colour);
-        my $coord2;
-        if ($move =~ /\w\d/i) {
-            $coord2 = convert_coord_std_to_letters $b->size, $move;
-        } elsif ($move =~ /pass/i) {
-            $coord2 = 'pass';
-        } elsif ($move =~ /resign/i) {
-            $coord2 = 'resign';
-        } else {
-            $self->message("Unknown move '$move' -- aborting\n");
-            die;
-        }
-        $self->message($self->name . " says: '$move' ($coord2)\n");
+        my $res;
+        if (defined $move) {
+            my $coord2;
+            if ($move =~ /\w\d/i) {
+                $coord2 = convert_coord_std_to_letters $b->size, $move;
+            } elsif ($move =~ /pass/i) {
+                $coord2 = 'pass';
+            } elsif ($move =~ /resign/i) {
+                $coord2 = 'resign';
+            } else {
+                $self->message("Unknown move '$move' -- aborting\n");
+                die;
+            }
+            $self->message($self->name . " says: '$move' ($coord2)\n");
 
-        my $res = $b->move($coord2) unless $self->dont_move;
+            $res = $b->move($coord2) unless $self->dont_move;
+        } else {
+            $res->{error} = "GTP engine crashed?";
+        }
+
         if (defined $res and $res->{error}) {
             add_game_to_list($self->error_games, $b);
-            message("Error on game ".$b->id.": $res->{error}\n");
+            $self->message("Error on game ".$b->id.": $res->{error}\n");
         }
         $done_something++;
     }
-#unlink $sgffile;
+    unlink $sgffile;
 }
 
 1;

@@ -60,7 +60,10 @@ sub gtp_transaction {
     print $in $command;
     my $resp = <$out>;
     warn "GTP-> $resp" if $trace_gtp;
-    die "Illegal GTP response <$resp>\n" unless $resp =~ /^= (.*)/;
+    if ($resp !~ /^= (.*)/) {
+        warn "Illegal GTP response <$resp>\n";
+        return undef;
+    }
     $resp = $1;
     <$out>; # throw out white line
 
