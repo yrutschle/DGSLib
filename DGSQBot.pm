@@ -265,7 +265,7 @@ sub do_everything {
         }
         $done_something++;
     }
-    unlink $sgffile;
+    unlink $self->sgffile;
 }
 
 1;
