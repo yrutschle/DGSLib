@@ -27,7 +27,7 @@ use DGSQBot;
 my $bot = new DGSQBot(
     name => "GnuGo",
 
-    verbose => 1,
+    verbose => 0,
     dont_move => 0,
 
     logging => 1,

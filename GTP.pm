@@ -36,7 +36,7 @@ my $trace_gtp = 0;
 sub new {
     my ($class, $engine, $board, %opts) = @_;
 
-    $engine = sprintf($engine, $board->size);
+    $engine = sprintf($engine, $board->size) if ($engine =~ /%d/);
 
     my ($in, $out);
     my $pid = open2($out, $in, $engine);
