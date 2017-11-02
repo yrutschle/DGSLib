@@ -167,6 +167,7 @@ sub do_everything {
                 $m->reject_game($self->badsize_msg) unless $self->dont_move;
                 $m->boardsize(0) if not defined $m->boardsize;
                 $m->handicap(0) if not defined $m->handicap; # Workaround undefined values, don't know where they come from 01OCT2012
+                $m->rated(0) if not defined $m->rated; # I still get undefined values, wtf? 16JUL2017
                 $self->message("reject game (size ".$m->boardsize." handicap ".$m->handicap." rated ".$m->rated.")\n");
             }
         } else {
