@@ -77,6 +77,8 @@ sub do_login {
         warn "loggin in..\n" if $verbose;
         my $response = $self->do_http("login.php?quick_mode=1&userid=".$self->login."&passwd=".$self->passwd);
 
+        exit 1 if not defined $response;
+
         # Get login cookies
         $cookie_jar = HTTP::Cookies->new;
         $cookie_jar->extract_cookies($response);
@@ -94,7 +96,8 @@ sub do_login {
     }
 
     if (not defined $self->status) {
-        die "Error getting status";
+        #die "Error getting status";
+        exit 0;  # Sometimes it just happens...
     }
 
     return 1;
