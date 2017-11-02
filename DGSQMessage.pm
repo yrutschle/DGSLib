@@ -32,6 +32,7 @@ has text => (is => 'rw', isa => 'Str' );
 has sender => (is => 'rw', isa => 'Str' );
 has handicap => (is => 'rw', isa => 'Int' );
 has handicap_type => ( is => 'rw', isa => 'Str' );
+has game_type => (is => 'rw', isa => 'Str' );
 has komi => (is => 'rw', isa => 'Str' );
 has ruleset => (is => 'rw', isa => 'Str' );
 has boardsize => (is => 'rw', isa => 'Int' );
@@ -69,7 +70,7 @@ sub load_info {
         $self->weekend_clocked($info->{game_settings}->{time_weekend_clock});
         $self->komi($info->{game_settings}->{calc_komi});
         for my $field (qw/opp_started_games time_mode time_main time_byo time_periods 
-            rated ruleset handicap_type/) {
+            rated ruleset handicap_type game_type/) {
             $self->$field($info->{game_settings}->{$field});
         }
     }

@@ -52,9 +52,13 @@ my $bot = new DGSQBot(
     # rejected with the  badsize_msg.
     # It must return 1 to accept the invite, 0 otherwise.
     board_ok => sub { 
-        ($_[0]->opp_started_games <= 5) and ($_[0]->boardsize >= 13) and ($_[0]->boardsize <= 19) or  not $_[0]->rated
+        my ($b) = $_[0];
+        (($b->opp_started_games <= 5) 
+            and ($b->boardsize >= 13) and ($b->boardsize <= 19)) 
+            or  not $b->rated
+            or ($b->game_type != "GO")
     },
-    badsize_msg => "I am sorry, I only play board sizes 13 to 19, and no more than 5 games per user at a time. If you want to play smaller than 13, I'll only accept a non-rated game.",
+    badsize_msg => "I am sorry, I only play board sizes 13 to 19, and no more than 5 games per user at a time. If you want to play smaller than 13, I'll only accept a non-rated game. Also, I only play normal Go games, no team go or others.",
 
     # pre_run is called after loading the sgf, before 
     # computing the move.
