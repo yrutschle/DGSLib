@@ -2,7 +2,7 @@ DGSLib
 ======
 
 This library implements a client to play on
-<http://www.dragongoserver.net> (DGS). The client knows how
+<https://www.dragongoserver.net> (DGS). The client knows how
 to log in, retrieve the list of games to be played, retrieve
 board positions, play moves and sometimes finish games.
 

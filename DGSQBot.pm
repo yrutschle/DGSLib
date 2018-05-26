@@ -97,7 +97,7 @@ sub new {
     $dgs->verbose($self->verbose);
     $dgs->throttle_file($self->throttle_file);
 #    $dgs->url("http://dragongoserver.sourceforge.net");
-    $dgs->url('http://www.dragongoserver.net');
+    $dgs->url('https://www.dragongoserver.net');
     $dgs->do_login;
    
     $self->dgsclient($dgs);
