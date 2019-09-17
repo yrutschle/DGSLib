@@ -5,6 +5,8 @@ This library implements a client to play on
 <https://www.dragongoserver.net> (DGS). The client knows how
 to log in, retrieve the list of games to be played, retrieve
 board positions, play moves and sometimes finish games.
+It uses the QuickSuite API, which is thoroughly documented
+in DGS sourcecode <https://sourceforge.net/p/dragongoserver/dgs-main/ci/master/tree/specs/quick_suite.txt>.
 
 A Robot object is also provided, which makes it trivial to
 interface a GTP Go program to DGS.
